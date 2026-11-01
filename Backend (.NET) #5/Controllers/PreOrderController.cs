@@ -3,41 +3,49 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Backend__.NET___5.Controllers {
     [ApiController]
-    [Route("api/pre-orders")]
+    [Route("guest/groups")]
     public class PreOrderController : ControllerBase {
-        [HttpGet("{groupId}/sessions")]
-        public ActionResult<GroupPreOrderResponseDto> GetGroupSessions(Guid groupId) {
-            var mockSessions = new List<ParticipantSessionDto>
+        [HttpGet("{groupReservationId}/sessions")]
+        public ActionResult<GroupPreOrderResponseDto> GetGroupSessions(string groupReservationId) {
+            var mockParticipants = new List<ParticipantDto>
             {
-                new ParticipantSessionDto
+                new ParticipantDto
                 {
-                    SessionId = Guid.NewGuid(),
-                    ParticipantName = "Олександр",
-                    Dishes = new List<DishDto>
+                    Id = "session1",
+                    Type = "Guest",
+                    Name = "Andrii",
+                    Items = new List<ItemDto>
                     {
-                        new DishDto { DishId = 1, Name = "Хінкалі класичні", Price = 150, Quantity = 2 },
-                        new DishDto { DishId = 2, Name = "Хачапурі по-аджарськи", Price = 220, Quantity = 1 }
-                    }
+                        new ItemDto
+                        {
+                            Dish = new DishDto { Id = "dish1", Name = "Caesar Salad", Price = 180 },
+                            Quantity = 2
+                        }
+                    },
+                    Total = 360,
+                    IsSubmitted = true
                 },
-                new ParticipantSessionDto
+                new ParticipantDto
                 {
-                    SessionId = Guid.NewGuid(),
-                    ParticipantName = "Артем",
-                    Dishes = new List<DishDto>
+                    Id = "session2",
+                    Type = "Guest",
+                    Name = "Olena",
+                    Items = new List<ItemDto>
                     {
-                        new DishDto { DishId = 1, Name = "Хінкалі класичні", Price = 150, Quantity = 3 },
-                        new DishDto { DishId = 3, Name = "Узвар", Price = 60, Quantity = 2 }
-                    }
+                        new ItemDto
+                        {
+                            Dish = new DishDto { Id = "dish2", Name = "Tom Yum", Price = 220 },
+                            Quantity = 1
+                        }
+                    },
+                    Total = 220,
+                    IsSubmitted = false
                 }
             };
 
-            foreach (var session in mockSessions) {
-                session.TotalParticipantAmount = session.Dishes.Sum(d => d.Price * d.Quantity);
-            }
-
             var response = new GroupPreOrderResponseDto {
-                ParticipantSessions = mockSessions,
-                TotalGroupAmount = mockSessions.Sum(s => s.TotalParticipantAmount)
+                Participants = mockParticipants,
+                Total = 580
             };
 
             return Ok(response);
